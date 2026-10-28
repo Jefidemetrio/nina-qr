@@ -3,7 +3,7 @@ from pathlib import Path
 import os
 app = Flask(__name__)
 # Bridge do WhatsApp da Nina escreve em /tmp/bridge_stdout.log
-LOG = Path(os.getenv('BRIDGE_LOG', '/tmp/bridge_stdout_fernanda.log'))
+LOG = Path(os.getenv('BRIDGE_LOG', '/tmp/bridge_stdout.log'))
 
 @app.route('/')
 def index():
