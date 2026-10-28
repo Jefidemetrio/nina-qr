@@ -12,16 +12,15 @@ def index():
             candidates = list(LOG.glob('bridge_stdout.log*'))
             if candidates:
                 log_file = candidates[0]
-                text = log_file.read_text(errors='ignore')
-                m = re.search(r'Scan this QR code with WhatsApp on your phone:\\\\n+(.*?)\\\\nWaiting for scan', text, re.S)
-                qr = m.group(1).strip() if m else 'QR não encontrado ainda. Aguarde o bridge gerar.'
             else:
                 qr = 'Caminho /data/bridge_stdout.log é um diretório e não contém arquivo de log.'
                 return f'<html><body><pre>{qr}</pre></body></html>'
         else:
-            text = LOG.read_text(errors='ignore')
-            m = re.search(r'Scan this QR code with WhatsApp on your phone:\\\\n+(.*?)\\\\nWaiting for scan', text, re.S)
-            qr = m.group(1).strip() if m else 'QR não encontrado ainda. Aguarde o bridge gerar.'
+            log_file = LOG
+        text = log_file.read_text(errors='ignore')
+        # Extrai o conteúdo entre o marcador e Waiting for scan
+        m = re.search(r'Scan this QR code with WhatsApp on your phone:\n+(.*?)\\nWaiting for scan', text, re.S)
+        qr = m.group(1).strip() if m else 'QR não encontrado ainda. Aguarde o bridge gerar.'
     except Exception as e:
         qr = f'Erro: {e}'
     return f'<html><body><pre>{qr}</pre></body></html>'
