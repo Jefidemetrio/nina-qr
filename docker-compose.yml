@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  nina-qr:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "18080:8000"
+    volumes:
+      - /tmp/bridge_stdout.log:/data/bridge_stdout.log:ro
