@@ -1,9 +1,36 @@
 version: '3.8'
 services:
+  whatsapp-bridge:
+    image: node:20-alpine
+    container_name: nina-whatsapp-bridge
+    restart: unless-stopped
+    command: >
+      sh -c "npm install -g @whiskeysockets/baileys && 
+      cd /app && node scripts/whatsapp-bridge/bridge.js --port 3001 --session /data/session --mode bot"
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./scripts/whatsapp-bridge:/app/scripts/whatsapp-bridge
+      - ./whatsapp-session:/data/session
+    environment:
+      - WHATSAPP_MODE=bot
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   nina-qr:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "18080:8000"
+      - "8000:8000"
+    environment:
+      - BRIDGE_URL=http://whatsapp-bridge:3001/qr
+    depends_on:
+      whatsapp-bridge:
+        condition: service_healthy
     volumes:
-      - /tmp/bridge_stdout.log:/data/bridge_stdout.log:ro
+      - ./logs:/app/logs
