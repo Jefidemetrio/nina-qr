@@ -6,9 +6,12 @@ LOG = Path('/data/bridge_stdout.log')
 @app.route('/')
 def index():
     try:
-        text = LOG.read_text(errors='ignore')
-        m = re.search(r'Scan this QR code with WhatsApp on your phone:\n+(.*?)\nWaiting for scan', text, re.S)
-        qr = m.group(1).strip() if m else 'QR não encontrado ainda. Aguarde o bridge gerar.'
+        if not LOG.exists():
+            qr = 'Arquivo de log ainda não existe em /data/bridge_stdout.log. Aguarde o bridge gerar o arquivo.'
+        else:
+            text = LOG.read_text(errors='ignore')
+            m = re.search(r'Scan this QR code with WhatsApp on your phone:\\n+(.*?)\\nWaiting for scan', text, re.S)
+            qr = m.group(1).strip() if m else 'QR não encontrado ainda. Aguarde o bridge gerar.'
     except Exception as e:
         qr = f'Erro: {e}'
     return f'<html><body><pre>{qr}</pre></body></html>'
