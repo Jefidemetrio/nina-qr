@@ -814,6 +814,7 @@ const _ACCEPTED_HOST_VALUES = new Set([
   '127.0.0.1',
   '[::1]',
   '::1',
+  'whatsapp-bridge',
 ]);
 
 app.use((req, res, next) => {
