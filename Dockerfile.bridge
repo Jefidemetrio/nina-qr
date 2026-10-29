@@ -1,0 +1,18 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies for baileys
+RUN apk add --no-cache python3 make g++
+
+# Install baileys globally
+RUN npm install -g @whiskeysockets/baileys
+
+# Copy bridge scripts
+COPY scripts/whatsapp-bridge /app/scripts/whatsapp-bridge
+
+# Expose port
+EXPOSE 3001
+
+# Run bridge
+CMD ["node", "scripts/whatsapp-bridge/bridge.js", "--port", "3001", "--session", "/data/session", "--mode", "bot"]
