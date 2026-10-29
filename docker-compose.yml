@@ -11,10 +11,10 @@ services:
       - "3001:3001"
     volumes:
       - ./scripts/whatsapp-bridge:/app/scripts/whatsapp-bridge
-      - /opt/data/profiles/nina/whatsapp/session:/data/session
-      - /opt/data/profiles/nina/cache/images:/opt/data/profiles/nina/cache/images
-      - /opt/data/profiles/nina/cache/documents:/opt/data/profiles/nina/cache/documents
-      - /opt/data/profiles/nina/cache/audio:/opt/data/profiles/nina/cache/audio
+      - nina-whatsapp-session:/data/session
+      - nina-cache-images:/opt/data/profiles/nina/cache/images
+      - nina-cache-documents:/opt/data/profiles/nina/cache/documents
+      - nina-cache-audio:/opt/data/profiles/nina/cache/audio
     environment:
       - WHATSAPP_MODE=bot
       - HERMES_IMAGE_CACHE_DIR=/opt/data/profiles/nina/cache/images
@@ -40,3 +40,9 @@ services:
         condition: service_healthy
     volumes:
       - ./logs:/app/logs
+
+volumes:
+  nina-whatsapp-session:
+  nina-cache-images:
+  nina-cache-documents:
+  nina-cache-audio:
